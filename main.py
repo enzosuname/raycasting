@@ -51,9 +51,42 @@ def cast_rays():
     for ray in range(CASTED_RAYS):
         # cast ray step by step
         for depth in range(MAX_DEPTH):
-            target_x = (player_x - math.sin(player_angle))
+            # get ray in target coords
+            target_x = player_x - math.sin(start_angle) * depth
+            target_y = player_y + math.cos(start_angle) * depth
 
-    start_angle += STEP_ANGLE
+            # convert target Y coord to map row
+            col = int(target_x / TILE_SIZE)
+            row = int(target_y / TILE_SIZE)
+
+            # calculate map square index
+            square = row * MAP_SIZE + col
+
+            if MAP[square] == '#':
+                pygame.draw.rect(screen, (0, 255, 0), (col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE - 2, TILE_SIZE - 2))
+
+
+                #draw casted ray
+                pg.draw.line(screen, (0, 255, 0), (player_x, player_y),
+                             (target_x, target_y))
+
+                color = 255/(1 + depth * depth * 0.0001)
+                depth *= math.cos(player_angle - start_angle)
+
+                # calc wall height
+                wall_height =  21000 / (depth + 0.0001)
+
+                if wall_height > SCREEN_HEIGHT: wall_height = SCREEN_HEIGHT
+
+                # draw 3d projection
+                pg.draw.rect(screen, (color, color, color),
+                             (SCREEN_HEIGHT + ray * SCALE,
+                              (SCREEN_HEIGHT / 2) - wall_height / 2,
+                              SCALE, wall_height))
+
+                break
+
+        start_angle += STEP_ANGLE
 
 # Start running game
 running = True
@@ -65,9 +98,20 @@ while running:
             # sys.exit(0)
     if keys[pg.K_LEFT]: player_angle -= 0.1
     if keys[pg.K_RIGHT]: player_angle += 0.1
+    if keys[pg.K_UP]:
+        player_x += -math.sin(player_angle) * 3
+        player_y += math.cos(player_angle) * 3
+    if keys[pg.K_DOWN]:
+        player_x -= -math.sin(player_angle) * 3
+        player_y -= math.cos(player_angle) * 3
+
 
     # background
     pg.draw.rect(screen, (0, 0, 0), (0, 0, SCREEN_HEIGHT, SCREEN_HEIGHT))
+
+    # update 3d background
+    pg.draw.rect(screen, (100, 100, 100), (480, SCREEN_HEIGHT / 2, SCREEN_HEIGHT, SCREEN_HEIGHT))
+    pg.draw.rect(screen, (200, 200, 200), (480, -SCREEN_HEIGHT / 2, SCREEN_HEIGHT, SCREEN_HEIGHT))
 
     # draw 2D map
     draw_map()
