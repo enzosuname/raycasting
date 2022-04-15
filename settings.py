@@ -15,10 +15,14 @@ STEP_ANGLE = FOV / CASTED_RAYS
 MAX_DEPTH = int(MAP_SIZE * TILE_SIZE)
 SCALE = SCREEN_HEIGHT / CASTED_RAYS
 
+MAP_SCALE = 64
+MAP_RANGE = MAP_SIZE * MAP_SCALE
+MAP_SPEED = (MAP_SCALE / 2) / 10
+
 # global variables
-player_x = SCREEN_HEIGHT - SCREEN_HEIGHT/2
-player_y = SCREEN_HEIGHT - SCREEN_HEIGHT/2
-player_angle = math.pi
+player_x = MAP_SCALE + 100.0
+player_y = MAP_SCALE + 100.0
+player_angle = math.pi / 3
 
 pg.init()
 screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
