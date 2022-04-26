@@ -16,7 +16,7 @@ def draw_map():
             # draw map in the game window
             pg.draw.rect(
                 screen,
-                (200, 200, 200) if MAP[square] == '#' else (100, 100, 100),
+                (200, 200, 200) if MAP[square] != '0' else (100, 100, 100),
                 (col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE - 2, TILE_SIZE - 2)
             )
 
@@ -54,7 +54,7 @@ def cast_rays():
             # calculate map square index
             square = row * MAP_SIZE + col
 
-            if MAP[square] == '#':
+            if MAP[square] != '0':
                 #pygame.draw.rect(screen, (0, 255, 0), (col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE - 2, TILE_SIZE - 2))
 
 
@@ -104,7 +104,7 @@ while running:
 
     square = row * MAP_SIZE + col
 
-    if MAP[square] == '#':
+    if MAP[square] != '0':
         if forward:
             player_x -= -math.sin(player_angle) * 3
             player_y -= math.cos(player_angle) * 3
@@ -114,17 +114,20 @@ while running:
 
 
 
-    # background
-    #pg.draw.rect(screen, (0, 0, 0), (0, 0, SCREEN_HEIGHT, SCREEN_HEIGHT))
 
-    # draw 2D map
-    #draw_map()
 
     pg.draw.rect(screen, (100, 100, 100), (0, SCREEN_HEIGHT / 2, SCREEN_HEIGHT, SCREEN_HEIGHT))
     pg.draw.rect(screen, (200, 200, 200), (0, -SCREEN_HEIGHT / 2, SCREEN_HEIGHT, SCREEN_HEIGHT))
 
     # apply raycasting
     cast_rays()
+
+    if keys[pg.K_m]:
+        # background
+        pg.draw.rect(screen, (0, 0, 0), (0, 0, SCREEN_HEIGHT, SCREEN_HEIGHT))
+
+        # draw 2D map
+        draw_map()
 
     clock.tick(30)
 
