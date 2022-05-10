@@ -17,7 +17,7 @@ def cast_rays():
     current_time = pg.time.get_ticks()
     current_angle = player_angle + HALF_FOV
     start_angle = player_angle - HALF_FOV
-    texture_y = '1'; texture_x = '1'
+    texture_x = '2' ; texture_y = '2'
 
 
     if current_time >= past_time + 30:
@@ -31,9 +31,6 @@ def cast_rays():
 
                 vertical_depth = (target_x - player_x) / current_sin
                 horizontal_depth = (target_x - player_x) / current_cos
-                target_y = player_y + vertical_depth * current_cos
-
-
 
                 # get ray in target coords
                 target_x = player_x - math.sin(start_angle) * depth
@@ -42,6 +39,7 @@ def cast_rays():
                 map_x = int(target_x / MAP_SCALE)
                 map_y = int(target_y / MAP_SCALE)
                 target_square = map_y * MAP_SIZE + map_x
+                # texture_y = MAP[target_square]
                 # if target_square not in range(len(MAP)): break
                 # if MAP[target_square] not in ' e':
                 #     texture_y = MAP[target_square] if MAP[target_square] !=
@@ -72,7 +70,7 @@ def cast_rays():
                     if wall_height > 50000: wall_height = 50000
 
                     # draw 3d projection
-                    texture_offset = texture_offset_x
+                    texture_offset = texture_offset_y #if vertical_depth < horizontal_depth else texture_offset_x
                     texture = texture_y if vertical_depth < horizontal_depth else texture_x
                     depth = vertical_depth if vertical_depth < horizontal_depth else horizontal_depth
                     depth *= math.cos(player_angle - current_angle)
