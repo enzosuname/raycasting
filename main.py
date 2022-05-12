@@ -17,7 +17,7 @@ def cast_rays():
     current_time = pg.time.get_ticks()
     current_angle = player_angle + HALF_FOV
     start_angle = player_angle - HALF_FOV
-    texture_x = '2' ; texture_y = '2'
+    texture_x = '1' ; texture_y = '1'
 
 
     if current_time >= past_time + 30:
@@ -50,8 +50,8 @@ def cast_rays():
 
                 # calculate map square index
                 square = row * MAP_SIZE + col
-                texture_offset_y = target_y
-                texture_offset_x = target_x
+                texture_offset_y = target_y - 20
+                texture_offset_x = target_x - 20
 
                 if MAP[square] != '0':
                     #pygame.draw.rect(screen, (0, 255, 0), (col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE - 2, TILE_SIZE - 2))
@@ -77,9 +77,12 @@ def cast_rays():
 
                     wall_block = textures[texture].subsurface(
                         (texture_offset - int(texture_offset / MAP_SCALE) * MAP_SCALE), 0, 1, 64)
-                    wall_block = pygame.transform.scale(wall_block, (12, abs(int(wall_height))))
+                    wall_block = pygame.transform.scale(wall_block, (10, abs(int(wall_height))))
                     zbuffer.append(
-                        {'image': wall_block, 'x': ray * SCALE, 'y': int(SCREEN_HEIGHT / 2 - wall_height / 2), 'distance': depth})
+                        {'image': wall_block,
+                         'x': ray * SCALE,
+                         'y': int(SCREEN_HEIGHT / 2 - wall_height/2),
+                         'distance': depth})
 
 
                     # pg.draw.rect(screen, (color, color, color),
