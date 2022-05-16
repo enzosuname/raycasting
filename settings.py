@@ -51,7 +51,7 @@ textures = {
 enemy = pg.image.load('Assets/enemy.png').convert_alpha()
 
 sprites = [
-    {'image': enemy.subsurface(0, 0, 64, 64), 'x': 200, 'y': 800, 'shift': 0.4, 'scale': 1.0, 'type': 'soldier', 'dead': False},
+    {'image': enemy.subsurface(0, 0, 64, 64), 'x': 600, 'y': 600, 'shift': 0.4, 'scale': 1.0, 'type': 'soldier', 'dead': False},
     # {'image': enemy.subsurface(0, 0, 64, 64), 'x': 150, 'y': 500, 'shift': 0.4, 'scale': 1.0, 'type': 'soldier', 'dead': False},
     # {'image': enemy.subsurface(0, 0, 64, 64), 'x': 270, 'y': 700, 'shift': 0.4, 'scale': 1.0, 'type': 'soldier', 'dead': False},
     # {'image': enemy.subsurface(0, 0, 64, 64), 'x': 250, 'y': 720, 'shift': 0.4, 'scale': 1.0, 'type': 'soldier', 'dead': False},

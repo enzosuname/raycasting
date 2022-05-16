@@ -170,10 +170,6 @@ while running:
     offset_x = math.sin(player_angle) * MAP_SPEED
     offset_y = math.cos(player_angle) * MAP_SPEED
 
-
-
-
-
     pg.draw.rect(screen, (100, 100, 100), (0, SCREEN_HEIGHT / 2, SCREEN_HEIGHT, SCREEN_HEIGHT))
     pg.draw.rect(screen, (200, 200, 200), (0, -SCREEN_HEIGHT / 2, SCREEN_HEIGHT, SCREEN_HEIGHT))
 
@@ -185,36 +181,12 @@ while running:
     for sprite in sprites:
         sprite_x = sprite['x'] - player_x
         sprite_y = sprite['y'] - player_y
-        sprite_distance = math.sqrt(sprite_x * sprite_x + sprite_y * sprite_y)
-        sprite2player_angle = math.atan2(sprite_x, sprite_y)
-        player2sprite_angle = sprite2player_angle - player_angle
-        if sprite_x < 0: player2sprite_angle += math.pi * 2
-        if sprite_x > 0 and math.degrees(player2sprite_angle) <= -180: player2sprite_angle += math.pi * 2
-        if sprite_x < 0 and math.degrees(player2sprite_angle) >= 180: player2sprite_angle -= math.pi * 2
-        shift_rays = player2sprite_angle / STEP_ANGLE
-        sprite_ray = CENTRAL_RAY - shift_rays
-        if sprite['type'] == 'soldier' and sprite['dead'] == True:
-            sprite_height = min(sprite['scale'] * MAP_SCALE * 300 / (sprite_distance + 0.0001), 400)
-        else: sprite_height = sprite['scale'] * MAP_SCALE * 300 / (sprite_distance + 0.0001)
-        if sprite['type'] == 'soldier':
-            if not sprite['dead']:
-                if abs(shift_rays) < 20 and sprite_distance < 500 and weapon['animation']:
-                    sprite['image'] = soldier_death[int(soldier_death_count / 8)]
-                    soldier_death_count += 1
-                    if soldier_death_count >= 16: sprite['dead'] = True; soldier_death_count = 0
-            else: sprite['image'] = soldier_death[-1]
-            if weapon['shot_count'] > 16 and sprite['image'] in [soldier_death[0], soldier_death[1], soldier_death[2]]:
-                try:
-                    sprite['image'] = soldier_death[int(soldier_death_count / 8) + 2]
-                except:
-                    pass
-                soldier_death_count += 1
-                if soldier_death_count >= 32: sprite['dead'] = True; soldier_death_count = 0
-            if not sprite['dead'] and sprite_distance <= 10: player_x -= offset_x; player_y -= offset_y
-            sprite_image = pygame.transform.scale(sprite['image'], (int(sprite_height), int(sprite_height)))
-            zbuffer.append({'image': sprite_image, 'x': sprite_ray - int(sprite_height / 2),
-                            'y': SCREEN_HEIGHT / 2 - 20, 'distance': sprite_distance})
-
+        sprite_height = 50
+        sprite_ray = 50
+        sprite_distance = math.sqrt(abs(sprite_x) ** 2 + abs(sprite_y) ** 2)
+        sprite_image = pygame.transform.scale(sprite['image'], (int(sprite_height), int(sprite_height)))
+        zbuffer.append({'image': sprite_image, 'x': sprite_ray - int(sprite_height / 2),
+                        'y': SCREEN_HEIGHT / 2 - 20, 'distance': sprite_distance})
 
     zbuffer = sorted(zbuffer, key=lambda k:['distance'], reverse=True)
     for item in zbuffer:
