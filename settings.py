@@ -3,7 +3,7 @@ import pygame.sprite
 import sys
 import math
 
-# global constants
+# global constants s
 SCREEN_HEIGHT = 480 * 2
 SCREEN_WIDTH = SCREEN_HEIGHT
 MAP_SIZE = 8

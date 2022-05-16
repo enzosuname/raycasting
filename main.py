@@ -5,7 +5,7 @@ from settings import *
 import sys
 import math
 
-# draw the map
+# draw the map a
 
 
 # raycasting algorithm
