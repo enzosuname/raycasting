@@ -22,6 +22,8 @@ def cast_rays():
 
     if current_time >= past_time + 30:
         past_time = current_time
+        global target_x
+        global target_y
         for ray in range(CASTED_RAYS):
             current_sin = math.sin(current_angle); current_sin = current_sin if current_sin else 0.000001
             current_cos = math.cos(current_angle); current_cos = current_cos if current_cos else 0.000001
@@ -124,10 +126,17 @@ def draw_map():
                      (player_x - math.sin(player_angle + HALF_FOV) * 50,
                       player_y + math.cos(player_angle + HALF_FOV) * 50), 3)
 
+    for sprite in sprites:
+        if sprite['type'] == 'soldier' and not sprite['dead']:
+            pygame.draw.circle(screen, (0, 0, 255),
+                               (int((sprite['x'] / MAP_SCALE) * 5), int((sprite['y'] / MAP_SCALE) * 5)), 2)
+
 # Start running game
 running = True
 while running:
     keys = pg.key.get_pressed()
+    global target_x
+    global target_y
     for event in pg.event.get():
         if event.type == pg.QUIT:
             quit()
@@ -142,6 +151,8 @@ while running:
         forward = False
         player_x -= -math.sin(player_angle) * 3
         player_y -= math.cos(player_angle) * 3
+    if keys[pygame.K_LCTRL]:
+        if weapon['animation'] == False: weapon['animation'] = True
 
     col = int(player_x / TILE_SIZE)
     row = int(player_y / TILE_SIZE)
@@ -156,6 +167,9 @@ while running:
             player_x += -math.sin(player_angle) * 3
             player_y += math.cos(player_angle) * 3
 
+    offset_x = math.sin(player_angle) * MAP_SPEED
+    offset_y = math.cos(player_angle) * MAP_SPEED
+
 
 
 
@@ -168,9 +182,51 @@ while running:
     # apply raycasting
     cast_rays()
 
+    for sprite in sprites:
+        sprite_x = sprite['x'] - player_x
+        sprite_y = sprite['y'] - player_y
+        sprite_distance = math.sqrt(sprite_x * sprite_x + sprite_y * sprite_y)
+        sprite2player_angle = math.atan2(sprite_x, sprite_y)
+        player2sprite_angle = sprite2player_angle - player_angle
+        if sprite_x < 0: player2sprite_angle += math.pi * 2
+        if sprite_x > 0 and math.degrees(player2sprite_angle) <= -180: player2sprite_angle += math.pi * 2
+        if sprite_x < 0 and math.degrees(player2sprite_angle) >= 180: player2sprite_angle -= math.pi * 2
+        shift_rays = player2sprite_angle / STEP_ANGLE
+        sprite_ray = CENTRAL_RAY - shift_rays
+        if sprite['type'] == 'soldier' and sprite['dead'] == True:
+            sprite_height = min(sprite['scale'] * MAP_SCALE * 300 / (sprite_distance + 0.0001), 400)
+        else: sprite_height = sprite['scale'] * MAP_SCALE * 300 / (sprite_distance + 0.0001)
+        if sprite['type'] == 'soldier':
+            if not sprite['dead']:
+                if abs(shift_rays) < 20 and sprite_distance < 500 and weapon['animation']:
+                    sprite['image'] = soldier_death[int(soldier_death_count / 8)]
+                    soldier_death_count += 1
+                    if soldier_death_count >= 16: sprite['dead'] = True; soldier_death_count = 0
+            else: sprite['image'] = soldier_death[-1]
+            if weapon['shot_count'] > 16 and sprite['image'] in [soldier_death[0], soldier_death[1], soldier_death[2]]:
+                try:
+                    sprite['image'] = soldier_death[int(soldier_death_count / 8) + 2]
+                except:
+                    pass
+                soldier_death_count += 1
+                if soldier_death_count >= 32: sprite['dead'] = True; soldier_death_count = 0
+            if not sprite['dead'] and sprite_distance <= 10: player_x -= offset_x; player_y -= offset_y
+            sprite_image = pygame.transform.scale(sprite['image'], (int(sprite_height), int(sprite_height)))
+            zbuffer.append({'image': sprite_image, 'x': sprite_ray - int(sprite_height / 2),
+                            'y': SCREEN_HEIGHT / 2 - 20, 'distance': sprite_distance})
+
+
     zbuffer = sorted(zbuffer, key=lambda k:['distance'], reverse=True)
     for item in zbuffer:
         screen.blit(item['image'], (item['x'], item['y']))
+
+    screen.blit(weapon['default'], (SCREEN_WIDTH / 2, SCREEN_HEIGHT - 193))
+    if weapon['animation']:
+        weapon['animation'] = True
+        screen.blit(weapon['shot'][int(weapon['shot_count'] / 5)], (SCREEN_WIDTH / 2, SCREEN_HEIGHT - 193))
+        weapon['shot_count'] += 1
+        if weapon['shot_count'] >= 15: weapon['shot_count'] = 0; weapon['animation'] = False;
+        pg.display.flip
 
     if keys[pg.K_m]:
         # background
@@ -180,6 +236,11 @@ while running:
         draw_map()
 
     clock.tick(30)
+
+    font = pygame.font.SysFont('Ariel', 30)
+    fps_surface = font.render('FPS: ' + str(int(clock.get_fps())), False, (255, 0, 0))
+    if keys[pygame.K_f]:
+        screen.blit(fps_surface, (120, 0))
 
     pg.display.flip()
 
