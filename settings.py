@@ -6,7 +6,7 @@ import math
 # global constants s
 SCREEN_HEIGHT = 480 * 2
 SCREEN_WIDTH = SCREEN_HEIGHT
-MAP_SIZE = 10
+MAP_SIZE = 8
 TILE_SIZE = SCREEN_HEIGHT / MAP_SIZE + 1
 FOV = math.pi / 3
 HALF_FOV = FOV / 2
@@ -37,16 +37,14 @@ clock = pg.time.Clock()
 
 # map
 MAP = (
-    '1111111111'
-    '1011000001'
-    '1000000111'
-    '1110000001'
-    '1000010001'
-    '1001110001'
-    '1000010001'
-    '1000000001'
-    '1000000001'
-    '1111111111'
+    '11111111'
+    '10110001'
+    '10000111'
+    '11100001'
+    '10000101'
+    '10011101'
+    '10000101'
+    '11111111'
 )
 
 textures = {
