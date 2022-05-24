@@ -10,6 +10,13 @@ from classes import *
 global past_time
 past_time = pg.time.get_ticks()
 
+############################# CONTROLS #############################
+# Up/Down keys are forward/back
+# Left/Right keys change the view to the left or right
+# Ctrl key shoots the pistol
+
+
+
 def align_grid(x, y):
     return (x // TILE_SIZE) * TILE_SIZE, (y // TILE_SIZE) * TILE_SIZE
 
