@@ -193,10 +193,10 @@ while running:
     for item in zbuffer:
         screen.blit(item['image'], (item['x'], item['y']))
 
-    screen.blit(weapon['default'], (SCREEN_WIDTH / 2, SCREEN_HEIGHT - 193))
+    screen.blit(pygame.transform.scale(weapon['default'], (400, 400)), (SCREEN_WIDTH / 2 - 175, SCREEN_HEIGHT - 400))
     if weapon['animation']:
         weapon['animation'] = True
-        screen.blit(weapon['shot'][int(weapon['shot_count'] / 5)], (SCREEN_WIDTH / 2, SCREEN_HEIGHT - 193))
+        screen.blit(weapon['shot'][int(weapon['shot_count'] / 5)], (SCREEN_WIDTH / 2 - 175, SCREEN_HEIGHT - 400))
         weapon['shot_count'] += 1
         if weapon['shot_count'] >= 15: weapon['shot_count'] = 0; weapon['animation'] = False;
         pg.display.flip

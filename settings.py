@@ -92,9 +92,9 @@ soldier_death_count = 0
 weapon = {
     'default': pg.image.load('Assets/gun_0.png').convert_alpha(),
     'shot': [
-        pg.image.load('Assets/gun_0.png').convert_alpha(),
-        pg.image.load('Assets/gun_1.png').convert_alpha(),
-        pg.image.load('Assets/gun_2.png').convert_alpha(),
+        pg.transform.scale(pg.image.load('Assets/gun_0.png').convert_alpha(), (400, 400)),
+        pg.transform.scale(pg.image.load('Assets/gun_1.png').convert_alpha(), (400, 400)),
+        pg.transform.scale(pg.image.load('Assets/gun_2.png').convert_alpha(), (400, 400)),
     ],
     'shot_count': 0,
     'animation': False
